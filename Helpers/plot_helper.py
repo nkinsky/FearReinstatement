@@ -53,6 +53,11 @@ class ScrollPlot:
             self.current_position += 1
         elif event.key == 'left' and self.current_position > 0:
             self.current_position -= 1
+        elif event.key == '6' and (self.current_position + 15) < self.last_position:
+            self.current_position += 15
+        elif event.key == '4' and self.current_position > 15:
+            self.current_position -= 15
+        # NK can't
 
     # Apply axis labels.
     def apply_labels(self):

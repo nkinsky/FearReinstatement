@@ -10,6 +10,7 @@ from pickle import dump, load
 from PIL import Image
 import numpy as np
 import cv2
+import csv
 from session_directory import load_session_list
 import plot_functions as plot_funcs
 from scipy.ndimage.filters import gaussian_filter as gfilt
@@ -252,11 +253,23 @@ class FFObj:
         """
         self.auto_detect_mouse(smooth_sigma, mouse_threshold)
         self.detect_freezing(velocity_threshold, min_freeze_duration, plot_freezing)
-        self.x,self.y,self.imaging_t,self.imaging_freezing = self.interpolate()
+        try:  # NK error catching
+            self.x,self.y,self.imaging_t,self.imaging_freezing = self.interpolate()
+        except FileNotFoundError:
+            print('No imaging file found - can''t interpolate tracking values')
 
     def save_data(self):
         with open(self.location,'wb') as output:
             dump(self,output)
+
+    def export_pos(self):
+        directory, _ = path.split(self.avi_location)
+        pos_filename = path.join(directory, 'pos.csv')
+        print(pos_filename)
+        with open(pos_filename, 'w') as f:
+            writer = csv.writer(f)
+            writer.writerow(self.position[:, 0])
+            writer.writerow(self.position[:, 1])
 
 class FrameSelector:
     """
