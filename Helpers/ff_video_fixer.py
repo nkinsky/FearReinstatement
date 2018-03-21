@@ -114,12 +114,19 @@ class FFObj:
             to_frame: frame number you want from_Frame to paste to.
         """
         # Get the selected area and the rectangle associated with it.
-        chunk, region = self.select_region(from_frame)
-        paste_onto_me = Image.fromarray(self.movie[to_frame])
+        good_stitch = False
+        while not good_stitch:
+            try:
+                chunk, region = self.select_region(from_frame)
+                paste_onto_me = Image.fromarray(self.movie[to_frame])
 
-        # Paste and also convert the image to grayscale.
-        paste_onto_me.paste(chunk, region)
-        self.baseline_frame = color.rgb2gray(np.array(paste_onto_me))
+                # Paste and also convert the image to grayscale.
+                paste_onto_me.paste(chunk, region)
+                self.baseline_frame = color.rgb2gray(np.array(paste_onto_me))
+                good_stitch = True
+                print('Baseline frame successfully stitched')
+            except:
+                print('Must start click in upper-left. Try again')
 
     def get_baseline_frame(self,stitch):
         """
@@ -245,6 +252,11 @@ class FFObj:
                        movie=self.movie, n_frames=self.n_frames,
                        position=self.position, freezing=self.freezing,
                        titles=titles)
+        fig_num = f.fig.number
+
+        # While the figure is still open, keep going.
+        while plt.fignum_exists(fig_num):
+            plt.waitforbuttonpress(0)
 
     def process_video(self,smooth_sigma=6, mouse_threshold=0.15, velocity_threshold=15,
                       min_freeze_duration=10, plot_freezing=True):
