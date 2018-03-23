@@ -10,8 +10,13 @@ from pickle import load
 
 master_directory = 'E:\Eraser\SessionDirectories'
 
-def load_session_list():
-    file = path.join(master_directory, 'SessionDirectories.pkl')
+def load_session_list(master_directory_custom):
+    if master_directory_custom == None:
+        dir_use = master_directory
+    else:
+        dir_use = master_directory_custom
+
+    file = path.join(dir_use, 'SessionDirectories.pkl')
     session_list = load(open(file, 'rb'))
 
     return session_list
