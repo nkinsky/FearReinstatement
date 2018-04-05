@@ -86,18 +86,18 @@ def find_mouse_directory(mouse):
 
     return mouse_directory
 
-def find_session_directory(mouse,date,session)
 
+def find_session_directory(mouse,date,sesh):
     session_list = load_session_list()
 
-    # Seems really inefficient but functional for now. Searches the directory containing that
-    # mouse's data folders.
     sesh_not_found = True
     while sesh_not_found:
         for session in session_list:
-            if session["Animal"] == mouse and session["Date"] == date and:
-                mouse_directory = path.split(session["Location"])[0]
-                mouse_not_found = False
+            if session["Animal"] == mouse and session["Date"] == date and \
+                    session["Session"] == sesh:
+                session_directory = session["Location"]
+                sesh_not_found = False
                 break
 
-    return mouse_directory
+    return session_directory
+
