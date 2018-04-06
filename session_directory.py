@@ -12,6 +12,7 @@ from pickle import dump
 
 master_directory = 'E:\Eraser\SessionDirectories'
 
+
 def make_session_list(csv_directory):
     """
 
@@ -43,16 +44,14 @@ def make_session_list(csv_directory):
 
     return session_directories
 
-def load_session_list(master_directory_custom):
-    if master_directory_custom == None:
-        dir_use = master_directory
-    else:
-        dir_use = master_directory_custom
+
+def load_session_list(dir_use = master_directory):
 
     file = path.join(dir_use, 'SessionDirectories.pkl')
     session_list = load(open(file, 'rb'))
 
     return session_list
+
 
 def check_session(session_index):
     """
@@ -71,8 +70,9 @@ def check_session(session_index):
     print("Location: " + session_list[session_index]["Location"])
     print("Notes: " + session_list[session_index]["Notes"])
 
-def find_mouse_directory(mouse):
-    session_list = load_session_list()
+
+def find_mouse_directory(mouse, list_dir=master_directory):
+    session_list = load_session_list(list_dir)
 
     # Seems really inefficient but functional for now. Searches the directory containing that
     # mouse's data folders.
@@ -83,21 +83,35 @@ def find_mouse_directory(mouse):
                 mouse_directory = path.split(session["Location"])[0]
                 mouse_not_found = False
                 break
+        # Break out of while loop once you've made it through all the sessions
+        mouse_not_found = False
+        mouse_directory = None
 
     return mouse_directory
 
 
-def find_session_directory(mouse,date,sesh):
-    session_list = load_session_list()
+def find_session_directory(mouse, date, sesh, list_dir=master_directory):
+    session_list = load_session_list(list_dir)
 
-    sesh_not_found = True
-    while sesh_not_found:
-        for session in session_list:
-            if session["Animal"] == mouse and session["Date"] == date and \
-                    session["Session"] == sesh:
-                session_directory = session["Location"]
-                sesh_not_found = False
-                break
+    session_directory = None
+    for session in session_list:
+        if session["Animal"] == mouse and session["Date"] == date and \
+                session["Session"] == str(sesh):
+            session_directory = session["Location"]
+            break
+
+    return session_directory
+
+
+def find_eraser_directory(mouse, arena, exp_day, list_dir=master_directory):
+    session_list = load_session_list(list_dir)
+
+    session_directory = None
+    for session in session_list:
+        if session["Animal"] == mouse and session["Notes"].find(str(exp_day)) != -1 \
+                and session["Notes"].find(arena) != -1:
+            session_directory = session["Location"]
+            break
 
     return session_directory
 
