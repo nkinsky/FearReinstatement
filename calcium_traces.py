@@ -17,22 +17,6 @@ import numpy as np
 
 session_list = load_session_list()
 
-def check_session(session_index):
-    """
-    Displays all the details of that session as recorded in the CSV file.
-
-    :param
-        session_index: number corresponding to a session.
-    :return
-        Printed session information.
-    """
-
-    print("Mouse: " + session_list[session_index]["Animal"])
-    print("Date: " + session_list[session_index]["Date"])
-    print("Session # that day: " + session_list[session_index]["Session"])
-    print("Location: " + session_list[session_index]["Location"])
-    print("Notes: " + session_list[session_index]["Notes"])
-
 def load_traces(session_index):
     """
     Load traces from data of single sessions saved via Inscopix Data Processing
@@ -50,7 +34,7 @@ def load_traces(session_index):
     # Gather data.
     data = CellData(session_index)
 
-    return data.traces, data.accepted, data.t
+    return data.traces.astype(np.float), data.accepted, data.t.astype(np.float)
 
 def plot_traces(session_index, neurons):
     """
@@ -89,7 +73,7 @@ def plot_freezing_traces(session_index):
                    share_y=True,  xlabel='Time (s)', ylabel='%DF/F')
 
 def freezing_trace_heatmap(session_index, neurons='all'):
-    if neurons is 'all':
+    if neurons == 'all':
         n_neurons = cell_stats.get_number_of_ICs(session_index)
         neurons = np.arange(n_neurons)
     else:
