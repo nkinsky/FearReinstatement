@@ -106,10 +106,17 @@ def find_session_directory(mouse, date, sesh, list_dir=master_directory):
 def find_eraser_directory(mouse, arena, exp_day, list_dir=master_directory):
     session_list = load_session_list(list_dir)
 
-    session_directory = None
+    # Construct regular expression to grab proper day
+    import re
+    daystr = ' +' + str(exp_day)
+    dayreg = re.compile(daystr)
+
+    # Loop through all sessions and check if mouse, arena, and exp_day all match
+    session_directory = None # Spit out None if no match is found
     for session in session_list:
-        if session["Animal"] == mouse and session["Notes"].find(str(exp_day)) != -1 \
-                and session["Notes"].find(arena) != -1:
+        if session["Animal"] == mouse and session["Notes"].find(arena) != -1 and \
+                dayreg.search(session["Notes"]) is not None:
+
             session_directory = session["Location"]
             break
 

@@ -10,7 +10,8 @@ from os import chdir
 from csv import DictReader
 from pickle import dump
 
-def make_session_list(csv_directory):
+
+def make_session_list(csv_directory='E:\Eraser\SessionDirectories'):
     """
     
     Make a list of recording sessions by reading from an editable CSV found in 

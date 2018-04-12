@@ -293,11 +293,13 @@ class FFObj:
                        movie=self.movie, n_frames=self.n_frames,
                        position=self.position, freezing=self.freezing,
                        titles=titles)
-        fig_num = f.fig.number
+
+        # fig_num = f.fig.number
+        # plt.waitforbuttonpress(0)
 
         # While the figure is still open, keep going.
-        while plt.fignum_exists(fig_num):
-            plt.waitforbuttonpress(0)
+        # while plt.fignum_exists(fig_num):
+        #    plt.waitforbuttonpress(0)
 
     def process_video(self,smooth_sigma=6, mouse_threshold=0.15,
                       velocity_threshold=15, min_freeze_duration=10,
