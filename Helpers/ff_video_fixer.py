@@ -295,7 +295,6 @@ class FFObj:
                        titles=titles)
 
         # fig_num = f.fig.number
-        # plt.waitforbuttonpress(0)
 
         # While the figure is still open, keep going.
         # while plt.fignum_exists(fig_num):
