@@ -70,6 +70,7 @@ class FFObj:
         """
         Open the CSV file imported from FreezeFrame.
         """
+        ### NK Question: why is this not grabbing the first row in each file?
         with open(self.csv_location, 'r') as csv_file:
             data = read_csv(csv_file)
 
@@ -216,6 +217,9 @@ class FFObj:
         pos_diff = np.diff(self.position, axis=0)                       # For calculating distance.
         time_diff = np.diff(self.video_t)                               # Time difference.
         distance = np.hypot(pos_diff[:,0], pos_diff[:,1])               # Displacement.
+        if (time_diff.__len__() + 1) == (distance.__len__()):
+            distance = distance[0:-1]
+
         self.velocity = np.concatenate(([0], distance//time_diff))      # Velocity.
         self.freezing = self.velocity < velocity_threshold
 
@@ -510,6 +514,6 @@ class MouseDetector:
 
 
 if __name__ == '__main__':
-    FF = FFObj(1)
-    FF.process_video()
+    FF = FFObj(138)
+    FF.disp_baseline()
     pass
