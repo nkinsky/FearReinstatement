@@ -304,7 +304,6 @@ class FFObj:
                             movie=self.movie, n_frames=self.n_frames,
                             position=self.position, titles=titles)
 
-
     def correct_position(self, current_position=0):
         self.plot_position(current_position)
         self.f.fig.canvas.mpl_connect('button_press_event',
