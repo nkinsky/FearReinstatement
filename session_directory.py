@@ -9,6 +9,8 @@ from os import path, chdir
 from pickle import load
 from csv import DictReader
 from pickle import dump
+from helper_functions import find_dict_index
+import numpy as np
 
 master_directory = 'E:\Eraser\SessionDirectories'
 
@@ -48,6 +50,7 @@ def make_session_list(csv_directory):
 def load_session_list(dir_use = master_directory):
 
     file = path.join(dir_use, 'SessionDirectories.pkl')
+
     session_list = load(open(file, 'rb'))
 
     return session_list
@@ -73,6 +76,7 @@ def check_session(session_index):
 
 def find_mouse_directory(mouse, list_dir=master_directory):
     session_list = load_session_list(list_dir)
+
 
     # Seems really inefficient but functional for now. Searches the directory containing that
     # mouse's data folders.
@@ -121,4 +125,20 @@ def find_eraser_directory(mouse, arena, exp_day, list_dir=master_directory):
             break
 
     return session_directory
+
+
+def find_mouse_sessions(mouse):
+    session_list = load_session_list()
+
+    filtered = filter(lambda sessions: sessions["Animal"] == mouse,
+                      session_list)
+    sessions = list(filtered)
+
+    idx = np.asarray(find_dict_index(session_list, "Animal", mouse))
+
+    return idx, sessions
+
+
+if __name__ == '__main__':
+    find_mouse_sessions("Marble07")
 
