@@ -21,7 +21,8 @@ class ScrollPlot:
     """
 
     # Initialize the class. Gather the data and labels.
-    def __init__(self, plot_func, xlabel = 'x', ylabel = 'y', titles = (["Title"] * 10000), **kwargs):
+    def __init__(self, plot_func, xlabel = '', ylabel = '',
+                 titles = ([' '] * 10000), **kwargs):
         self.plot_func = plot_func
         self.xlabel = xlabel
         self.ylabel = ylabel
@@ -29,15 +30,21 @@ class ScrollPlot:
         self.n_rows = 1
         self.n_cols = 1
         self.share_y = False
+        self.share_x = False
+        self.figsize = (8,6)
 
         # Dump all arguments into ScrollPlot.
         for key,value in kwargs.items():
             setattr(self,key,value)
 
-        self.fig, (self.ax) = plt.subplots(self.n_rows, self.n_cols, sharey=self.share_y)
+        self.fig, (self.ax) = plt.subplots(self.n_rows, self.n_cols,
+                                           sharey=self.share_y,
+                                           sharex=self.share_x,
+                                           figsize = self.figsize)
 
         # Necessary for scrolling.
-        self.current_position = 0
+        if not hasattr(self, 'current_position'):
+            self.current_position = 0
 
         # Plot the first time series and label.
         self.plot_func(self)
@@ -79,10 +86,10 @@ class ScrollPlot:
 
         # Run the plotting function.
         self.plot_func(self)
+        self.apply_labels()
 
         # Draw.
         self.fig.canvas.draw()
-        self.apply_labels()
 
         if event.key == 'escape':
             plt.close(self.fig)

@@ -13,11 +13,15 @@ import matplotlib.pyplot as plt
 import calcium_traces as ca_traces
 from helper_functions import find_closest
 import numpy as np
+from os import path
+from pickle import load, dump
+import data_preprocessing as d_pp
+import scipy.io as sio
 
 session_list = load_session_list()
 
 
-def load_events(session_index):
+def load_event_times(session_index):
     """
     Load calcium events and save to disk if not already saved.
 
@@ -30,6 +34,22 @@ def load_events(session_index):
 
     return data.event_times, data.event_values
 
+
+def save_events(session_index):
+    from ff_video_fixer import load_session
+
+    entire_session_events, _ = load_events(session_index)
+    session = load_session(session_index)
+    events = d_pp.trim_session(entire_session_events,
+                               session.mouse_in_cage)
+
+    directory = session_list[session_index]["Location"]
+    file = path.join(directory, 'Events.mat')
+
+    sio.savemat(file,{'events': events,
+                      'events_all': entire_session_events})
+
+
 def plot_events(session_index, neurons):
     """
         Plot events as a scatter plot.
@@ -38,9 +58,9 @@ def plot_events(session_index, neurons):
             neurons: List of neurons.
         :return
             f: ScrollPlot class.
-        """
+    """
     # Load events.
-    event_times, event_values = load_events(session_index)
+    event_times, event_values = load_event_times(session_index)
 
     # Plot and scroll through calcium events.
     titles = neuron_number_title(neurons)
@@ -48,6 +68,7 @@ def plot_events(session_index, neurons):
                    event_times=event_times[neurons], event_values=event_values[neurons],
                    xlabel='Time (s)', ylabel='Event magnitude', titles=titles)
     return f
+
 
 def overlay_events(session_index, neurons):
     """
@@ -59,8 +80,8 @@ def overlay_events(session_index, neurons):
         f: ScrollPlot class.
     """
     # Load events and traces.
-    event_times, event_values = load_events(session_index)
-    traces, _, t = ca_traces.load_traces(session_index)
+    event_times, event_values = load_event_times(session_index)
+    traces, t = ca_traces.load_traces(session_index)
 
     # Plot and scroll.
     titles = neuron_number_title(neurons)
@@ -71,20 +92,32 @@ def overlay_events(session_index, neurons):
 
     return f
 
-def make_event_matrix(session_index):
-    event_times, event_values = load_events(session_index)
 
-    traces, accepted, t = ca_traces.load_traces(session_index)
+def load_events(session_index):
+    directory = session_list[session_index]["Location"]
+    file_path = path.join(directory, "EventMatrix.pkl")
+    try:
+        with open(file_path, 'rb') as file:
+            events = load(file)
 
-    events = np.zeros(traces.shape)
+        _, t = ca_traces.load_traces(session_index)
 
-    for cell,timestamps in enumerate(event_times):
-        for i,this_time in enumerate(timestamps):
-            _,idx = find_closest(t,this_time)
-            events[cell, idx] = event_values[cell][i]
+    except:
+        event_times, event_values = load_event_times(session_index)
 
-    return events
+        traces, t = ca_traces.load_traces(session_index)
 
+        events = np.zeros(traces.shape)
+
+        for cell, timestamps in enumerate(event_times):
+            for i, this_time in enumerate(timestamps):
+                _, idx = find_closest(t, this_time)
+                events[cell, idx] = event_values[cell][i]
+
+        with open(file_path, 'wb') as file:
+            dump(events, file, protocol=4)
+
+    return events, t
 
 if __name__ == '__main__':
-    make_event_matrix(0)
+    overlay_events(0,[1,2,3,4,5])

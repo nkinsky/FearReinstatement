@@ -1,12 +1,20 @@
-import cell_stats
 from os import path
 from pandas import read_csv
 from csv import DictReader
 from pickle import dump, load
 from numpy import delete,array
 from session_directory import load_session_list
+import numpy as np
+from glob import glob
 
 session_list = load_session_list()
+
+def get_number_of_ICs(session_index):
+    directory = path.join(session_list[session_index]["Location"],'ROIs')
+    ROIs = glob(path.join(directory,'ROIs_C*.*'))
+
+    n_ICs = len(ROIs)
+    return n_ICs
 
 
 class CellData:
@@ -24,6 +32,7 @@ class CellData:
                 self.traces = data.traces
                 self.n_ICs = data.n_ICs
                 self.accepted = data.accepted
+                self.accepted_neurons = data.accepted_neurons
                 self.event_times = data.event_times
                 self.event_values = data.event_values
                 self.t = data.t
@@ -33,7 +42,7 @@ class CellData:
             # Initialize.
             self.traces = []
             self.t = []
-            self.n_ICs = cell_stats.get_number_of_ICs(session_number)
+            self.n_ICs = get_number_of_ICs(session_number)
             self.accepted = [False] * self.n_ICs
 
             # Compile.
@@ -56,19 +65,22 @@ class CellData:
             if accepted_csv.iloc[cell, 0] == ' accepted':
                 self.accepted[cell] = True
 
+        self.accepted_neurons = np.asarray(
+                                [cell_number for cell_number, good in
+                                 enumerate(self.accepted) if good]
+                                )
+
     def compile_traces(self):
         """
         Compile calcium traces.
         """
         with open(self.trace_file, 'r') as csv_file:
-            self.traces = read_csv(csv_file, skiprows=2).T.as_matrix()  # Need to transpose here.
+            traces = read_csv(csv_file, skiprows=1).T.as_matrix()  # Need to transpose here.
 
-    def compile_time(self):
-        """
-        Extract the time vector.
-        """
-        self.t = self.traces[0, :]
-        self.traces = delete(self.traces, 0, axis=0)  # Delete time vector from traces.
+        # First row is the time vector so extract that then add 1 to
+        # the neuron indices.
+        self.t = traces[0,:]
+        self.traces = traces[self.accepted_neurons + 1]
 
     def compile_events(self):
         """
@@ -78,17 +90,23 @@ class CellData:
         with open(self.event_file) as csv_file:
             events_csv = DictReader(csv_file)
 
+            # Preallocate.
             self.event_times = [[] for x in range(self.n_ICs)]
             self.event_values = [[] for x in range(self.n_ICs)]
+
             # Gather calcium events.
             for row in events_csv:
+
+                # Get the cell number then append the event timestamps to the nested list.
                 ind = int(row[" Cell Name"][2:])
                 self.event_times[ind].append(row["Time (s)"])
                 self.event_values[ind].append(row[" Value"])
 
         # Turn a list of lists into an array of lists. This will make indexing easier.
-        self.event_times = array(self.event_times)
-        self.event_values = array(self.event_values)
+        event_times = array(self.event_times)
+        self.event_times = event_times[self.accepted_neurons]
+        event_values = array(self.event_values)
+        self.event_values = event_values[self.accepted_neurons]
 
     def compile_all(self):
         """
@@ -96,7 +114,6 @@ class CellData:
         """
         self.compile_accepted_list()
         self.compile_traces()
-        self.compile_time()
         self.compile_events()
 
         # Pickle the class instance.
@@ -105,4 +122,4 @@ class CellData:
 
 
 if __name__ == '__main__':
-    CellData(11)
+    CellData(0)
