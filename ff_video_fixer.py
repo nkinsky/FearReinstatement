@@ -231,6 +231,8 @@ class FFObj:
         pos_diff = np.diff(self.position, axis=0)                       # For calculating distance.
         time_diff = np.diff(self.video_t)                               # Time difference.
         distance = np.hypot(pos_diff[:,0], pos_diff[:,1])               # Displacement.
+
+        # NK note - need a general bugfix here to chop extra timestamps in the video/position data
         if (time_diff.__len__() + 1) == (distance.__len__()):
             distance = distance[0:-1]
 
@@ -303,6 +305,7 @@ class FFObj:
                             current_position=current_position,
                             movie=self.movie, n_frames=self.n_frames,
                             position=self.position, titles=titles)
+
 
     def correct_position(self, current_position=0):
         self.plot_position(current_position)
