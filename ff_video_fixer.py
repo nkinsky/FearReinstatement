@@ -232,7 +232,8 @@ class FFObj:
         time_diff = np.diff(self.video_t)                               # Time difference.
         distance = np.hypot(pos_diff[:,0], pos_diff[:,1])               # Displacement.
 
-        # NK note - need a general bugfix here to chop extra timestamps in the video/position data
+        # NK note - the code below is no needed and actually disguises a mistake by the experimenter when they use
+        # .avi and Index.csv files that don't match
         if (time_diff.__len__() + 1) == (distance.__len__()):
             distance = distance[0:-1]
 
