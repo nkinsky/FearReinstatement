@@ -45,7 +45,7 @@ def make_session_list(csv_directory):
     return session_directories
 
 
-def load_session_list(dir_use = master_directory):
+def load_session_list(dir_use=master_directory):
 
     file = path.join(dir_use, 'SessionDirectories.pkl')
     session_list = load(open(file, 'rb'))
@@ -122,3 +122,7 @@ def find_eraser_directory(mouse, arena, exp_day, list_dir=master_directory):
 
     return session_directory
 
+
+if __name__ == '__main__':
+    find_eraser_directory('Marble07','Open',-2)
+    pass

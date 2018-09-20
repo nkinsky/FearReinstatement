@@ -201,9 +201,9 @@ class FFObj:
                                       self.video_t[this_epoch[1]-1])
             imaging_freezing[start_idx:end_idx] = True
 
-        return x,y,imaging_t,imaging_freezing
+        return x, y, imaging_t, imaging_freezing
 
-    def detect_freezing(self,velocity_threshold, min_freeze_duration,
+    def detect_freezing(self, velocity_threshold, min_freeze_duration,
                         plot_freezing):
         """
         Detect freezing epochs.
@@ -330,6 +330,7 @@ class FFObj:
             writer = csv.writer(f)
             writer.writerow(self.position[:, 0])
             writer.writerow(self.position[:, 1])
+
 
 class FrameSelector:
     """

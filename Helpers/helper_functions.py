@@ -1,12 +1,13 @@
 import numpy as np
 
+
 def find_closest(array, value):
     idx = (np.abs(array - value)).argmin()
 
-    return array[idx],idx
+    return array[idx], idx
 
 
-def ismember(A,B):
+def ismember(A, B):
     """
     Returns an array containing logical True where data in A is found in B. Also returns
     indices in B for every value of A.
