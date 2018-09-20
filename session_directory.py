@@ -5,12 +5,19 @@ Created on Mon Jan 22 09:23:20 2018
 @author: William Mau
 """
 
-from os import path, chdir
+from os import path, chdir, environ
 from pickle import load
 from csv import DictReader
 from pickle import dump
+from helper_functions import find_dict_index
+import numpy as np
 
-master_directory = 'E:\Eraser\SessionDirectories'
+# Grab computer name to identify proper session directory location
+comp_name = environ['COMPUTERNAME']
+if comp_name == 'NATLAPTOP':
+    master_directory = 'C:\Eraser\SessionDirectories'
+elif comp_name == 'NORVAL' or comp_name == 'CAS-2CUMM202-02':
+    master_directory = 'E:\Eraser\SessionDirectories'
 
 
 def make_session_list(csv_directory):
@@ -48,6 +55,7 @@ def make_session_list(csv_directory):
 def load_session_list(dir_use=master_directory):
 
     file = path.join(dir_use, 'SessionDirectories.pkl')
+
     session_list = load(open(file, 'rb'))
 
     return session_list
@@ -104,6 +112,14 @@ def find_session_directory(mouse, date, sesh, list_dir=master_directory):
 
 
 def find_eraser_directory(mouse, arena, exp_day, list_dir=master_directory):
+    """
+        Pulls the working directory for Eraser mice based on mouse name, arena type, and exposure day
+
+        :param
+
+        :return
+            session_directory: working directory for mouse/arena/exposure day
+        """
     session_list = load_session_list(list_dir)
 
     # Construct regular expression to grab proper day
@@ -123,6 +139,19 @@ def find_eraser_directory(mouse, arena, exp_day, list_dir=master_directory):
     return session_directory
 
 
+def find_mouse_sessions(mouse):
+    session_list = load_session_list()
+
+    filtered = filter(lambda sessions: sessions["Animal"] == mouse,
+                      session_list)
+    sessions = list(filtered)
+
+    idx = np.asarray(find_dict_index(session_list, "Animal", mouse))
+
+    return idx, sessions
+
+
 if __name__ == '__main__':
     find_eraser_directory('Marble07','Open',-2)
     pass
+
