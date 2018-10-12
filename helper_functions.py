@@ -30,9 +30,9 @@ def ismember(A, B):
     return B_in_A, B_idx
 
 
-def find_dict_index(list, key, value):
+def find_dict_index(test, key, value):
     idx = []
-    for i, dic in enumerate(list):
+    for i, dic in enumerate(test):
         if dic[key] == value:
             idx.append(i)
 
