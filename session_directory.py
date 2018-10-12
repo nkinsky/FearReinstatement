@@ -152,5 +152,6 @@ def find_mouse_sessions(mouse):
 
 
 if __name__ == '__main__':
-    find_mouse_sessions("Marble07")
+    find_eraser_directory('Marble07','Open',-2)
+    pass
 
