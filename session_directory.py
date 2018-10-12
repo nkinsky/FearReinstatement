@@ -9,7 +9,7 @@ from os import path, chdir, environ
 from pickle import load
 from csv import DictReader
 from pickle import dump
-from helper_functions import find_dict_index
+from helper_functions import find_dict_index as fd
 import numpy as np
 
 # Grab computer name to identify proper session directory location
@@ -146,7 +146,7 @@ def find_mouse_sessions(mouse):
                       session_list)
     sessions = list(filtered)
 
-    idx = np.asarray(find_dict_index(session_list, "Animal", mouse))
+    idx = np.asarray(fd(session_list, "Animal", mouse))
 
     return idx, sessions
 

@@ -38,6 +38,7 @@ def find_dict_index(list, key, value):
 
     return idx
 
+
 def shift_rows(data):
     n_rows, n_cols = data.shape
     max_shift = n_cols - 1
@@ -50,11 +51,13 @@ def shift_rows(data):
 
     return out
 
+
 def get_longest_run(list):
     length = max(sum(1 for _ in items) for val, items
         in groupby(list) if val)
 
     return length
+
 
 def get_event_rate(events):
     assert np.max(events) <= 1, 'Binarize input first.'
