@@ -215,7 +215,11 @@ class FFObj:
                                       self.video_t[this_epoch[1] - 1])
             imaging_freezing[start_idx:end_idx] = True
 
+<<<<<<< HEAD:Helpers/ff_video_fixer.py
+        return x, y, imaging_t, imaging_freezing
+=======
         return x, y, imaging_t, imaging_freezing, imaging_v
+>>>>>>> 0d81c85d66bac057c7e7c9e50fb860acfd7d2950:ff_video_fixer.py
 
     def detect_freezing(self, velocity_threshold, min_freeze_duration,
                         plot_freezing):

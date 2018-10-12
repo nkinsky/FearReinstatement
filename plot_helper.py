@@ -21,34 +21,36 @@ class ScrollPlot:
     """
 
     # Initialize the class. Gather the data and labels.
-    def __init__(self, plot_func, xlabel = '', ylabel = '',
-                 titles = ([' '] * 10000), **kwargs):
+    def __init__(self, plot_func, xlabel='', ylabel='',
+                 titles=([' '] * 10000), n_rows=1,
+                 n_cols=1, figsize=(8, 6), **kwargs):
         self.plot_func = plot_func
         self.xlabel = xlabel
         self.ylabel = ylabel
         self.titles = titles
-        self.n_rows = 1
-        self.n_cols = 1
+        self.n_rows = n_rows  # NK can make default = len(plot_func)
+        self.n_cols = n_cols
         self.share_y = False
         self.share_x = False
-        self.figsize = (8,6)
+        self.figsize = figsize
 
         # Dump all arguments into ScrollPlot.
-        for key,value in kwargs.items():
-            setattr(self,key,value)
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
-        self.fig, (self.ax) = plt.subplots(self.n_rows, self.n_cols,
+        self.fig, self.ax = plt.subplots(self.n_rows, self.n_cols,
                                            sharey=self.share_y,
                                            sharex=self.share_x,
-                                           figsize = self.figsize)
+                                           figsize=self.figsize)
 
         # Necessary for scrolling.
         if not hasattr(self, 'current_position'):
             self.current_position = 0
 
-        # Plot the first time series and label.
-        self.plot_func(self)
-        self.apply_labels()
+        # Plot the first plot of each function and label
+        for ax_ind, plot_f in enumerate(self.plot_func):
+            plot_f(self, ax_ind)
+            self.apply_labels()
 
         # Connect the figure to keyboard arrow keys.
         self.fig.canvas.mpl_connect('key_press_event',
@@ -64,7 +66,6 @@ class ScrollPlot:
             self.current_position += 15
         elif event.key == '4' and self.current_position > 15:
             self.current_position -= 15
-        # NK can't
 
     # Apply axis labels.
     def apply_labels(self):
@@ -78,6 +79,7 @@ class ScrollPlot:
         try:
             for ax in self.ax:
                 ax.cla()
+                # print('Cleared axes!')
         except:
             self.ax.cla()
 
@@ -85,8 +87,9 @@ class ScrollPlot:
         self.scroll(event)
 
         # Run the plotting function.
-        self.plot_func(self)
-        self.apply_labels()
+        for ax_ind, plot_f in enumerate(self.plot_func):
+            plot_f(self, ax_ind)
+            self.apply_labels()
 
         # Draw.
         self.fig.canvas.draw()
