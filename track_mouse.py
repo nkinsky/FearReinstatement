@@ -6,8 +6,10 @@ sesh_num = int(sesh_str)
 sesh_num -= 1  # adjust to 0 = 1st entry
 t = FFObj(sesh_num)
 print('Tracking mouse')
-t.process_video()
 
+t.process_video()
 t.save_data()
 t.export_pos()
 print('Tracking successfully finished')
+
+

@@ -10,6 +10,7 @@ all_mice = ['Marble3', 'Marble6', 'Marble7', 'DVHPC_5', 'DVHPC_6',
             'DVHPC_7', 'DVHPC_8', 'DVHPC_9', 'DVHPC_10']  # All mice
 dmice_beh = ['DVHPC_5', 'DVHPC_6', 'DVHPC_7', 'DVHPC_8', 'DVHPC_9', 'DVHPC_10']  #DREADDS behavioral pilots
 imice_cont = ['Marble3', 'Marble6', 'Marble7']  # Control imaging mice
+gen_mice = ['GEN_1', 'GEN_2', 'GEN_3', 'GEN_4']
 
 
 _, axall = plt_frz(all_mice)
