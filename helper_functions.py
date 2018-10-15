@@ -30,13 +30,14 @@ def ismember(A, B):
     return B_in_A, B_idx
 
 
-def find_dict_index(list, key, value):
+def find_dict_index(test, key, value):
     idx = []
-    for i, dic in enumerate(list):
+    for i, dic in enumerate(test):
         if dic[key] == value:
             idx.append(i)
 
     return idx
+
 
 def shift_rows(data):
     n_rows, n_cols = data.shape
@@ -50,11 +51,13 @@ def shift_rows(data):
 
     return out
 
+
 def get_longest_run(list):
     length = max(sum(1 for _ in items) for val, items
         in groupby(list) if val)
 
     return length
+
 
 def get_event_rate(events):
     assert np.max(events) <= 1, 'Binarize input first.'

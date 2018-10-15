@@ -234,12 +234,12 @@ class FFObj:
         """
         pos_diff = np.diff(self.position, axis=0)                       # For calculating distance.
         time_diff = np.diff(self.video_t)                               # Time difference.
-        distance = np.hypot(pos_diff[:,0], pos_diff[:,1])               # Displacement.
+        distance = np.hypot(pos_diff[:, 0], pos_diff[:, 1])               # Displacement.
 
-        # NK note - the code below is no needed and actually disguises a mistake by the experimenter when they use
-        # .avi and Index.csv files that don't match
-        if (time_diff.__len__() + 1) == (distance.__len__()):
-            distance = distance[0:-1]
+        # NK note - the code below is not needed and actually disguises a mistake by the experimenter
+        # when they use .avi and Index.csv files that don't match
+        # if (time_diff.__len__() + 1) == (distance.__len__()):
+        #     distance = distance[0:-1]
 
         self.velocity = np.concatenate(([0], distance//time_diff))      # Velocity.
         self.freezing = self.velocity < velocity_threshold
@@ -355,7 +355,6 @@ class FFObj:
         except FileNotFoundError:
             print('No imaging file found - can''t interpolate tracking values')
 
-
     def save_data(self):
         directory, _ = path.split(self.avi_location)
         movie_file = path.join(directory, 'Movie.pkl')
@@ -367,7 +366,6 @@ class FFObj:
 
         with open(self.location, 'wb') as output:
             dump(self, output)
-
 
     def export_pos(self):
         directory, _ = path.split(self.avi_location)
@@ -562,7 +560,7 @@ class MouseDetector:
 
 
 if __name__ == '__main__':
-    FF = FFObj(138)
+    FF = FFObj(270)
     FF.disp_baseline()
     pass
 
