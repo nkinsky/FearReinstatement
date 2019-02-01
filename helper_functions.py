@@ -18,7 +18,7 @@ def ismember(A, B):
 
     A = list(A)
     try:
-        B_idx = np.zeros(len(B),dtype=int)
+        B_idx = np.zeros(len(B), dtype=int)
         for i,element in enumerate(B):
             try:
                 B_idx[i] = int(A.index(element))
@@ -30,9 +30,9 @@ def ismember(A, B):
     return B_in_A, B_idx
 
 
-def find_dict_index(test, key, value):
+def find_dict_index(list, key, value):
     idx = []
-    for i, dic in enumerate(test):
+    for i, dic in enumerate(list):
         if dic[key] == value:
             idx.append(i)
 

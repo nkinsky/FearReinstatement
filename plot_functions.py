@@ -64,7 +64,7 @@ def display_frame_and_freezing(obj, ida):
     if obj.current_position == 0:
         obj.current_position = round(obj.n_frames / 2)
 
-    obj.ax.imshow(obj.movie[obj.current_position], cmap='gray')
+    obj.ax[ida].imshow(obj.movie[obj.current_position], cmap='gray')
     if obj.freezing[obj.current_position]:
         obj.ax[ida].plot(obj.position[obj.current_position, 0], obj.position[obj.current_position, 1], 'bo')
     else:

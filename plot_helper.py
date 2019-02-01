@@ -42,6 +42,8 @@ class ScrollPlot:
                                            sharey=self.share_y,
                                            sharex=self.share_x,
                                            figsize=self.figsize)
+        if n_cols == 1 and n_rows == 1:
+            self.ax = (self.ax,)
 
         # Necessary for scrolling.
         if not hasattr(self, 'current_position'):

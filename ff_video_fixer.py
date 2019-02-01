@@ -215,11 +215,8 @@ class FFObj:
                                       self.video_t[this_epoch[1] - 1])
             imaging_freezing[start_idx:end_idx] = True
 
-<<<<<<< HEAD:Helpers/ff_video_fixer.py
-        return x, y, imaging_t, imaging_freezing
-=======
         return x, y, imaging_t, imaging_freezing, imaging_v
->>>>>>> 0d81c85d66bac057c7e7c9e50fb860acfd7d2950:ff_video_fixer.py
+
 
     def detect_freezing(self, velocity_threshold, min_freeze_duration,
                         plot_freezing):
@@ -306,7 +303,7 @@ class FFObj:
         # Plot frame and position of mouse.
         titles = ["Frame " + str(n) for n in range(self.n_frames)]
 
-        self.f = ScrollPlot(plot_funcs.display_frame_and_position,
+        self.f = ScrollPlot((plot_funcs.display_frame_and_position,),
                             current_position=current_position,
                             movie=self.movie, n_frames=self.n_frames,
                             position=self.position, titles=titles)
@@ -326,10 +323,10 @@ class FFObj:
         # Plot frame and position of mouse. Blue dots indicate freezing epochs.
         titles = ["Frame " + str(n) for n in range(self.n_frames)]
 
-        f = ScrollPlot(plot_funcs.display_frame_and_freezing,
-                       movie=self.movie, n_frames=self.n_frames,
-                       position=self.position, freezing=self.freezing,
-                       titles=titles)
+        self.f = ScrollPlot((plot_funcs.display_frame_and_freezing,),
+                            movie=self.movie, n_frames=self.n_frames,
+                            position=self.position, freezing=self.freezing,
+                            titles=titles)
 
     def process_video(self, smooth_sigma=6, mouse_threshold=0.15,
                       velocity_threshold=7, min_freeze_duration=5,
@@ -560,7 +557,7 @@ class MouseDetector:
 
 
 if __name__ == '__main__':
-    FF = FFObj(270)
+    FF = FFObj(384)
     FF.disp_baseline()
     pass
 
