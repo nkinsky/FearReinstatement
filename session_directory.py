@@ -20,7 +20,7 @@ elif comp_name == 'NORVAL' or comp_name == 'CAS-2CUMM202-02':
     master_directory = 'E:\Eraser\SessionDirectories'
 
 
-def make_session_list(csv_directory):
+def make_session_list(csv_directory=master_directory):
     """
 
     Make a list of recording sessions by reading from an editable CSV found in
