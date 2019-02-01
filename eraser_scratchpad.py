@@ -40,5 +40,23 @@ for ida, day in enumerate(days):
                        [np.max(PF.xEdges), np.max(PF.yEdges)]])
     lims[:, :, ida] = temp
 
+##
+import Placefields as pf
+import numpy as np
+mouse = 'Marble07'
+arenas = ['Shock']
+days = [-2]  # [-2, -1, 0, 4, 1, 2, 7]
+for arena in arenas:
+    try:  # load in PF object for day -2
+        PForig = pf.load_pf(mouse, arena, -2)
+    except:  # run placefields first if not done
+        pf.placefields(mouse, arena, -2)
+        PForig = pf.load_pf(mouse, arena, -2)
 
+    lims_use = np.asarray([[np.min(PForig.xEdges) - 5, np.min(PForig.yEdges) - 5],
+                           [np.max(PForig.xEdges) + 5, np.max(PForig.yEdges) + 5]])
+
+    for day in days:  # run placefields again with new limits and save!
+        pf.placefields(mouse, arena, day, lims_method=lims_use,
+                   save_file='placefields_cm1_manlims.pkl')
 
