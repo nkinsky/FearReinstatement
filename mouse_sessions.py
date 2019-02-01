@@ -6,12 +6,21 @@ Created on Wed Jan 17 10:42:45 2018
 """
 
 # Import libraries
-from os import chdir
+from os import chdir, environ
 from csv import DictReader
 from pickle import dump
 
 
-def make_session_list(csv_directory='E:\Eraser\SessionDirectories'):
+# Grab computer name to identify proper session directory location
+comp_name = environ['COMPUTERNAME']
+if comp_name == 'NATLAPTOP':
+    master_directory = 'C:\Eraser\SessionDirectories'
+elif comp_name == 'NORVAL' or comp_name == 'CAS-2CUMM202-02':
+    master_directory = 'E:\Eraser\SessionDirectories'
+# print(master_directory)
+
+
+def make_session_list(csv_directory=master_directory):
 
     """
     

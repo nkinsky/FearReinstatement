@@ -1,8 +1,10 @@
-# Import functions
+## Import functions
 
 from er_plot_functions import plot_all_freezing as plt_frz
 from er_plot_functions import plot_experiment_traj as pltexp
-
+import numpy as np
+import Placefields as pf
+##
 # Get freezing for all mice
 
 # Specify mice to plot here
@@ -25,6 +27,18 @@ axic.set_title('Imaging Control Mice Only')
 
 for mouse in all_mice:
     pltexp(mouse)
+
+
+## Run through and get limits for all sessions for Marble7 to get idea of x/y lims of data
+days = [-2, -1, 0, 4, 1, 2, 7]
+arena = 'Shock'
+mouse = 'Marble07'
+lims = np.ones((2, 2, len(days)))*np.nan
+for ida, day in enumerate(days):
+    PF = pf.load_pf(mouse, arena, day)
+    temp = np.asarray([[np.min(PF.xEdges), np.min(PF.yEdges)],
+                       [np.max(PF.xEdges), np.max(PF.yEdges)]])
+    lims[:, :, ida] = temp
 
 
 

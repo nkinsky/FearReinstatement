@@ -18,9 +18,10 @@ if comp_name == 'NATLAPTOP':
     master_directory = 'C:\Eraser\SessionDirectories'
 elif comp_name == 'NORVAL' or comp_name == 'CAS-2CUMM202-02':
     master_directory = 'E:\Eraser\SessionDirectories'
+# print(master_directory)
 
 
-def make_session_list(csv_directory):
+def make_session_list(csv_directory=master_directory):
     """
 
     Make a list of recording sessions by reading from an editable CSV found in
@@ -152,6 +153,7 @@ def find_mouse_sessions(mouse):
 
 
 if __name__ == '__main__':
-    find_eraser_directory('Marble07','Open',-2)
+    # find_eraser_directory('Marble07','Open',-2)
+    load_session_list()
     pass
 
