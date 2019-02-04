@@ -140,6 +140,34 @@ def find_eraser_directory(mouse, arena, exp_day, list_dir=master_directory):
     return session_directory
 
 
+def find_eraser_session(mouse, arena, exp_day, list_dir=master_directory):
+    """
+        Pulls the session info for Eraser mice based on mouse name, arena type, and exposure day
+
+        :param
+
+        :return
+            session_use: all session info for mouse/arena/exposure day
+        """
+    session_list = load_session_list(list_dir)
+
+    # Construct regular expression to grab proper day
+    import re
+    daystr = ' +' + str(exp_day)
+    dayreg = re.compile(daystr)
+
+    # Loop through all sessions and check if mouse, arena, and exp_day all match
+    session_use = None  # Spit out None if no match is found
+    for session in session_list:
+        if session["Animal"] == mouse and session["Notes"].find(arena) != -1 and \
+                dayreg.search(session["Notes"]) is not None:
+
+            session_use = session
+            break
+
+    return session_use
+
+
 def find_mouse_sessions(mouse):
     session_list = load_session_list()
 

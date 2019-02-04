@@ -40,23 +40,34 @@ for ida, day in enumerate(days):
                        [np.max(PF.xEdges), np.max(PF.yEdges)]])
     lims[:, :, ida] = temp
 
-##
+## Mice to run PFs on
+control_mice_good = ['Marble06', 'Marble11', 'Marble12', 'Marble24']
+
+ani_mice = ['Marble19', 'Marble25']
+
+# Run with limits set to 1st session!
 import Placefields as pf
 import numpy as np
-mouse = 'Marble07'
+# mouse = 'Marble07'
+mice = ani_mice
 arenas = ['Shock']
-days = [-2]  # [-2, -1, 0, 4, 1, 2, 7]
-for arena in arenas:
-    try:  # load in PF object for day -2
-        PForig = pf.load_pf(mouse, arena, -2)
-    except:  # run placefields first if not done
-        pf.placefields(mouse, arena, -2)
-        PForig = pf.load_pf(mouse, arena, -2)
+days = [-2, -1, 0, 4, 1, 2, 7]
+for mouse in mice:
+    for arena in arenas:
+        try:  # load in PF object for day -2
+            PForig = pf.load_pf(mouse, arena, -2)
+        except FileNotFoundError:  # run placefields first if not done
+            pf.placefields(mouse, arena, -2)
+            PForig = pf.load_pf(mouse, arena, -2)
 
-    lims_use = np.asarray([[np.min(PForig.xEdges) - 5, np.min(PForig.yEdges) - 5],
-                           [np.max(PForig.xEdges) + 5, np.max(PForig.yEdges) + 5]])
+        lims_use = np.asarray([[np.min(PForig.xEdges) - 3, np.min(PForig.yEdges) - 3],
+                               [np.max(PForig.xEdges) + 3, np.max(PForig.yEdges) + 3]])
 
-    for day in days:  # run placefields again with new limits and save!
-        pf.placefields(mouse, arena, day, lims_method=lims_use,
-                   save_file='placefields_cm1_manlims.pkl')
+        for day in days:  # run placefields again with new limits and save!
+            try:
+                pf.placefields(mouse, arena, day, lims_method=lims_use,
+                               save_file='placefields_cm1_manlims.pkl', nshuf=1000)
+            except:
+                print('Bad session')
 
+##
