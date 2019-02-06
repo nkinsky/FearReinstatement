@@ -80,7 +80,7 @@ for mouse in mice:
 
 ## Check to make sure all PF plots in a given arena are good/aligned
 arena = 'Shock'
-mouse = 'Marble25'
+mouse = 'Marble14'
 PF = []
 days = [-2, -1, 4, 1, 2, 7]  # make sure to include day 0 for open arena!
 for day in days:
