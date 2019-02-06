@@ -32,12 +32,19 @@ for mouse in all_mice:
 ## Run through and get limits for all sessions for Marble7 to get idea of x/y lims of data
 days = [-2, -1, 0, 4, 1, 2, 7]
 arena = 'Shock'
-mouse = 'Marble07'
+mouse = 'Marble12'
 lims = np.ones((2, 2, len(days)))*np.nan
 for ida, day in enumerate(days):
-    PF = pf.load_pf(mouse, arena, day)
-    temp = np.asarray([[np.min(PF.xEdges), np.min(PF.yEdges)],
-                       [np.max(PF.xEdges), np.max(PF.yEdges)]])
+
+    # Use this code if you have run Placefields on data without manual limits
+    # PF = pf.load_pf(mouse, arena, day)
+    # temp = np.asarray([[np.min(PF.xEdges), np.min(PF.yEdges)],
+    #                    [np.max(PF.xEdges), np.max(PF.yEdges)]])
+
+    # use this code if you have run with manual limits and you want to check
+    PF = pf.load_pf(mouse, arena, day, pf_file='placefields_cm1_manlims.pkl')
+    temp = np.asarray([[np.min(PF.pos_align[0, :]), np.min(PF.pos_align[1, :])],
+                       [np.max(PF.pos_align[0, :]), np.max(PF.pos_align[1, :])]])
     lims[:, :, ida] = temp
 
 ## Mice to run PFs on
@@ -49,7 +56,7 @@ ani_mice = ['Marble19', 'Marble25']
 import Placefields as pf
 import numpy as np
 # mouse = 'Marble07'
-mice = ani_mice
+mice = ['Marble11', 'Marble14']
 arenas = ['Shock']
 days = [-2, -1, 0, 4, 1, 2, 7]
 for mouse in mice:
@@ -70,4 +77,15 @@ for mouse in mice:
             except:
                 print('Bad session')
 
-##
+
+## Check to make sure all PF plots in a given arena are good/aligned
+arena = 'Shock'
+mouse = 'Marble25'
+PF = []
+days = [-2, -1, 4, 1, 2, 7]  # make sure to include day 0 for open arena!
+for day in days:
+    try:
+        PF = pf.load_pf(mouse, arena, day, pf_file='placefields_cm1_manlims.pkl')
+        PF.pfscroll()
+    except FileNotFoundError:
+        print('missing file for day ' + str(day))
