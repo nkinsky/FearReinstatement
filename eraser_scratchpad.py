@@ -56,16 +56,16 @@ ani_mice = ['Marble19', 'Marble25']
 import Placefields as pf
 import numpy as np
 # mouse = 'Marble07'
-mice = ['Marble11', 'Marble14']
+mice = ['Marble20']
 arenas = ['Shock']
-days = [-2, -1, 0, 4, 1, 2, 7]
+days = [-1, 1]  # [-2, -1, 0, 4, 1, 2, 7]
 for mouse in mice:
     for arena in arenas:
         try:  # load in PF object for day -2
-            PForig = pf.load_pf(mouse, arena, -2)
+            PForig = pf.load_pf(mouse, arena, days[0])
         except FileNotFoundError:  # run placefields first if not done
-            pf.placefields(mouse, arena, -2)
-            PForig = pf.load_pf(mouse, arena, -2)
+            pf.placefields(mouse, arena, days[0])
+            PForig = pf.load_pf(mouse, arena, days[0])
 
         lims_use = np.asarray([[np.min(PForig.xEdges) - 3, np.min(PForig.yEdges) - 3],
                                [np.max(PForig.xEdges) + 3, np.max(PForig.yEdges) + 3]])
@@ -79,8 +79,9 @@ for mouse in mice:
 
 
 ## Check to make sure all PF plots in a given arena are good/aligned
+import Placefields as pf
 arena = 'Shock'
-mouse = 'Marble14'
+mouse = 'Marble20'
 PF = []
 days = [-2, -1, 4, 1, 2, 7]  # make sure to include day 0 for open arena!
 for day in days:
