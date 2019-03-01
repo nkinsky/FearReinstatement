@@ -76,3 +76,18 @@ def get_event_rate(events):
 
     return event_rate
 
+
+def get_true_epochs(bool_in):
+    padded_bool = np.concatenate(([False], bool_in, [False]))
+    status_changes = np.abs(np.diff(padded_bool))
+
+    # Find where freezing begins and ends.
+    true_epochs = np.where(status_changes == 1)[0].reshape(-1, 2)
+
+    # freezing_epochs[freezing_epochs >= self.video_t.shape[0]] = \
+    #     self.video_t.shape[0] - 1
+
+    # Only take the middle.
+    true_epochs = true_epochs[1:-1]
+
+    return true_epochs

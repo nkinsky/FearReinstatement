@@ -35,8 +35,13 @@ def load_movie(session_index):
     directory = session_list[session_index]["Location"]
     position_path = path.join(directory, 'FreezeFrame', 'Movie.pkl')
 
-    with open(position_path, 'rb') as file:
-        FF = load(file)
+    try:
+        with open(position_path, 'rb') as file:
+            FF = load(file)
+    except FileNotFoundError:
+        FF = load_session(session_index)
+        FF.movie = skvideo.io.vread(FF.avi_location)
+
 
     return FF
 
@@ -216,7 +221,6 @@ class FFObj:
             imaging_freezing[start_idx:end_idx] = True
 
         return x, y, imaging_t, imaging_freezing, imaging_v
-
 
     def detect_freezing(self, velocity_threshold, min_freeze_duration,
                         plot_freezing):
