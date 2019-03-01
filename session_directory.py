@@ -11,6 +11,7 @@ from csv import DictReader
 from pickle import dump
 from helper_functions import find_dict_index as fd
 import numpy as np
+import re
 
 # Grab computer name to identify proper session directory location
 comp_name = environ['COMPUTERNAME']
@@ -18,6 +19,7 @@ if comp_name == 'NATLAPTOP':
     master_directory = 'C:\Eraser\SessionDirectories'
 elif comp_name == 'NORVAL' or comp_name == 'CAS-2CUMM202-02':
     master_directory = 'E:\Eraser\SessionDirectories'
+# print(master_directory)
 
 
 def make_session_list(csv_directory=master_directory):
@@ -139,6 +141,34 @@ def find_eraser_directory(mouse, arena, exp_day, list_dir=master_directory):
     return session_directory
 
 
+def find_eraser_session(mouse, arena, exp_day, list_dir=master_directory):
+    """
+        Pulls the session info for Eraser mice based on mouse name, arena type, and exposure day
+
+        :param
+
+        :return
+            session_use: all session info for mouse/arena/exposure day
+        """
+    session_list = load_session_list(list_dir)
+
+    # Construct regular expression to grab proper day
+    import re
+    daystr = ' +' + str(exp_day)
+    dayreg = re.compile(daystr)
+
+    # Loop through all sessions and check if mouse, arena, and exp_day all match
+    session_use = None  # Spit out None if no match is found
+    for session in session_list:
+        if session["Animal"] == mouse and session["Notes"].find(arena) != -1 and \
+                dayreg.search(session["Notes"]) is not None:
+
+            session_use = session
+            break
+
+    return session_use
+
+
 def find_mouse_sessions(mouse):
     session_list = load_session_list()
 
@@ -151,7 +181,27 @@ def find_mouse_sessions(mouse):
     return idx, sessions
 
 
+def fix_slash_date(date_use):
+    """
+    Sends dates in m/d/yyyy format to mm_dd_yyyy format
+    :param date_use: date in m/d/yyyy format (day an month can be 1-2 digits, year must be 4)
+    :return: u_date: date string in mm_dd_yyyy format
+    """
+
+    datereg = re.compile('/')  # regular expression to find all front slashes
+    slashmatch = datereg.finditer(date_use)  # Match all slashes, spit out iterator
+    slash1 = next(slashmatch)  # Get first iteration
+    mo = str.zfill(date_use[0:slash1.regs[0][0]], 2)  # find month num and fill in leading zero
+    slash2 = next(slashmatch)
+    day = str.zfill(date_use[slash1.regs[0][1]:slash2.regs[0][0]], 2)
+    year = date_use[slash2.regs[0][1]:]
+    u_date = mo + '_' + day + '_' + year
+
+    return u_date
+
+
 if __name__ == '__main__':
-    find_eraser_directory('Marble07','Open',-2)
+    # find_eraser_directory('Marble07','Open',-2)
+    load_session_list()
     pass
 

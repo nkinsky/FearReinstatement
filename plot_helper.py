@@ -38,12 +38,16 @@ class ScrollPlot:
         for key, value in kwargs.items():
             setattr(self, key, value)
 
-        self.fig, self.ax = plt.subplots(self.n_rows, self.n_cols,
+        self.fig, self.ax, = plt.subplots(self.n_rows, self.n_cols,
                                            sharey=self.share_y,
                                            sharex=self.share_x,
                                            figsize=self.figsize)
         if n_cols == 1 and n_rows == 1:
             self.ax = (self.ax,)
+
+        # Flatten into 1d array if necessary
+        if n_cols > 1 and n_rows > 1:
+             self.ax = self.ax.flat
 
         # Necessary for scrolling.
         if not hasattr(self, 'current_position'):
@@ -53,6 +57,7 @@ class ScrollPlot:
         for ax_ind, plot_f in enumerate(self.plot_func):
             plot_f(self, ax_ind)
             self.apply_labels()
+            # print(str(ax_ind))
 
         # Connect the figure to keyboard arrow keys.
         self.fig.canvas.mpl_connect('key_press_event',
@@ -95,7 +100,7 @@ class ScrollPlot:
         # Run the plotting function.
         for ax_ind, plot_f in enumerate(self.plot_func):
             plot_f(self, ax_ind)
-            self.apply_labels()
+            # self.apply_labels()
 
         # Draw.
         self.fig.canvas.draw()
