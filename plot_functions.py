@@ -157,3 +157,40 @@ def scatter_box(data, ax=None, f=None, xlabels=None, ylabel=None,
         ax.set_ylabel(ylabel)
 
     return f, ax
+
+
+def scatter_bar(data, ax=None, f=None, xlabels=None, ylabel=None,
+                spread=0.04, alpha=0.1, color='b'):
+    """
+    Same as scatter_box (above) but only plots mean and in bar graph format.
+    :param data:
+    :param ax:
+    :param f:
+    :param xlabels:
+    :param ylabel:
+    :param spread:
+    :param alpha:
+    :param box_color:
+    :return: f, ax
+    """
+
+    if ax is None:
+        f, ax = plt.subplots()
+
+    # Box plot.
+    ax.bar(np.arange(0, len(data)), [np.nanmean(frz) for frz in data],
+           color=color, edgecolor='k', width=0.6, alpha=0.5)
+
+    # For each element in the list, scatter.
+    for i, group in enumerate(data):
+        x = np.random.normal(i, spread, size=len(group))
+        ax.scatter(x, group, alpha=alpha, s=5, c='k')
+
+    # Label axes.
+    if xlabels is not None:
+        ax.set_xticks(np.arange(0, len(data)))
+        ax.set_xticklabels(xlabels)
+    if ylabel is not None:
+        ax.set_ylabel(ylabel)
+
+    return f, ax
