@@ -15,7 +15,7 @@ from pickle import dump
 comp_name = environ['COMPUTERNAME']
 if comp_name == 'NATLAPTOP':
     master_directory = 'C:\Eraser\SessionDirectories'
-elif comp_name == 'NORVAL' or comp_name == 'CAS-2CUMM202-02':
+elif comp_name == 'NORVAL' or comp_name == 'CAS-2CUMM202-02' or comp_name == 'RKC-HAS-WD-0005':
     master_directory = 'E:\Eraser\SessionDirectories'
 # print(master_directory)
 
