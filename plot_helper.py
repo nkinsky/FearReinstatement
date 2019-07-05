@@ -65,14 +65,35 @@ class ScrollPlot:
 
     # Go up or down the list. Left = down, right = up.
     def scroll(self, event):
-        if event.key == 'right' and self.current_position < self.last_position:
-            self.current_position += 1
-        elif event.key == 'left' and self.current_position > 0:
-            self.current_position -= 1
-        elif event.key == '6' and (self.current_position + 15) < self.last_position:
-            self.current_position += 15
-        elif event.key == '4' and self.current_position > 15:
-            self.current_position -= 15
+        if event.key == 'right' and self.current_position <= self.last_position:
+            if self.current_position <= self.last_position:
+                if self.current_position == self.last_position:
+                    self.current_position = 0
+                else:
+                    self.current_position += 1
+        elif event.key == 'left' and self.current_position >= 0:
+            if self.current_position == 0:
+                self.current_position = self.last_position
+            else:
+                self.current_position -= 1
+        elif event.key == '6':
+            if (self.current_position + 15) < self.last_position:
+                self.current_position += 15
+            elif (self.current_position + 15) >= self.last_position:
+                if self.current_position == self.last_position:
+                    self.current_position = 0
+                else:
+                    self.current_position = self.last_position
+        elif event.key == '4':
+            print('current position before = ' + str(self.current_position))
+            if self.current_position > 15:
+                self.current_position -= 15
+            elif self.current_position <= 15:
+                if self.current_position == 0:
+                    self.current_position = self.last_position
+                else:
+                    self.current_position = 0
+            print('current position after = ' + str(self.current_position))
         elif event.key == '9' and (self.current_position + 100) < self.last_position:
             self.current_position += 100
         elif event.key == '7' and self.current_position > 100:

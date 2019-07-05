@@ -3,6 +3,8 @@ from os import path
 from plot_helper import ScrollPlot
 import matplotlib.pyplot as plt
 import pygame
+import skvideo
+skvideo.setFFmpegPath(r'C:\Anaconda\envs\eraser\Lib\site-packages\ffmpeg\bin')
 import skvideo.io
 from skimage import color
 from pandas import read_csv
@@ -561,8 +563,7 @@ class MouseDetector:
 
 
 if __name__ == '__main__':
-    FF = FFObj(384)
-    FF.disp_baseline()
+    FF = FFObj(211)
     pass
 
     # FF = load_movie(1)
