@@ -8,14 +8,18 @@ import matplotlib.pyplot as plt
 
 
 class ScrollPlot:
-    """ 
-    Plot stuff then scroll through it!
+    """
+    Plot stuff then scroll through it! A bit hacked together as of 2/28/2020. Better would be to input a figure and axes
+    along with the appropriate plotting functions?
 
     :param
+        plot_func: tuple of plotting functions to plot into the appropriate axes
         x: X axis data.
         y: Y axis data.
         xlabel = 'x': X axis label.
         ylabel = 'y': Y axis label.
+        combine_rows = list of subplots rows to combine into one subplot. Currently only supports doing all bottom
+        rows which must match the functions specified in plot_func
 
 
     """
@@ -23,7 +27,7 @@ class ScrollPlot:
     # Initialize the class. Gather the data and labels.
     def __init__(self, plot_func, xlabel='', ylabel='',
                  titles=([' '] * 10000), n_rows=1,
-                 n_cols=1, figsize=(8, 6), **kwargs):
+                 n_cols=1, figsize=(8, 6), combine_rows = [], **kwargs):
         self.plot_func = plot_func
         self.xlabel = xlabel
         self.ylabel = ylabel
@@ -45,8 +49,14 @@ class ScrollPlot:
         if n_cols == 1 and n_rows == 1:
             self.ax = (self.ax,)
 
-        # Flatten into 1d array if necessary
-        if n_cols > 1 and n_rows > 1:
+        # Make rows into one subplot if specified
+        if len(combine_rows) > 0:
+            for row in combine_rows:
+                plt.subplot2grid((self.n_rows, self.n_cols), (row, 0), colspan=self.n_cols, fig=self.fig)
+            self.ax = self.fig.get_axes()
+
+        # Flatten into 1d array if necessary and not done already via combining rows
+        if n_cols > 1 and n_rows > 1 and hasattr(self.ax, 'flat'):
              self.ax = self.ax.flat
 
         # Necessary for scrolling.
@@ -58,6 +68,9 @@ class ScrollPlot:
             plot_f(self, ax_ind)
             self.apply_labels()
             # print(str(ax_ind))
+
+
+
 
         # Connect the figure to keyboard arrow keys.
         self.fig.canvas.mpl_connect('key_press_event',

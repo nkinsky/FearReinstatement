@@ -130,7 +130,7 @@ def find_eraser_directory(mouse, arena, exp_day, list_dir=master_directory):
     dayreg = re.compile(daystr)
 
     # Loop through all sessions and check if mouse, arena, and exp_day all match
-    session_directory = None # Spit out None if no match is found
+    session_directory = None  # Spit out None if no match is found
     for session in session_list:
         if session["Animal"] == mouse and session["Notes"].find(arena) != -1 and \
                 dayreg.search(session["Notes"]) is not None:
@@ -201,7 +201,6 @@ def fix_slash_date(date_use):
 
 
 if __name__ == '__main__':
-    # find_eraser_directory('Marble07','Open',-2)
-    load_session_list()
+    find_eraser_directory('ANI1test', 'Open', '1 hour')
     pass
 
