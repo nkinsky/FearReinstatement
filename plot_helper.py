@@ -5,6 +5,26 @@ Created on Thu Jan 18 10:53:29 2018
 @author: William Mau
 """
 import matplotlib.pyplot as plt
+import numpy as np
+
+
+def pretty_plot(ax, round_ylim=False):
+    """Generic function to make plot pretty, bare bones for now, will need updating
+    :param round_ylim set to True plots on ticks/labels at 0 and max, rounded to the nearest decimal. default = False
+    """
+
+    # TODO: move this into a plot_function helper module or something similar
+    # set ylims to min/max, rounded to nearest 10
+    if round_ylim == True:
+        ylims_round = np.round(ax.get_ylim(), decimals=-1)
+        ax.set_yticks(ylims_round)
+        ax.set_yticklabels([f'{lim:g}' for lim in iter(ylims_round)])
+
+    # turn off top and right axis lines
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+
+    return ax
 
 
 class ScrollPlot:

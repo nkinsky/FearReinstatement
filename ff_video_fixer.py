@@ -4,7 +4,7 @@ from plot_helper import ScrollPlot
 import matplotlib.pyplot as plt
 import pygame
 import skvideo
-skvideo.setFFmpegPath(r'C:\Anaconda\envs\eraser\Lib\site-packages\ffmpeg\bin')
+# skvideo.setFFmpegPath(r'C:\Anaconda\envs\eraser\Lib\site-packages\ffmpeg\bin')
 import skvideo.io
 from skimage import color
 from pandas import read_csv
