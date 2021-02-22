@@ -32,22 +32,23 @@ class ScrollPlot:
     Plot stuff then scroll through it! A bit hacked together as of 2/28/2020. Better would be to input a figure and axes
     along with the appropriate plotting functions?
 
-    :param
-        plot_func: tuple of plotting functions to plot into the appropriate axes
-        x: X axis data.
-        y: Y axis data.
-        xlabel = 'x': X axis label.
-        ylabel = 'y': Y axis label.
-        combine_rows = list of subplots rows to combine into one subplot. Currently only supports doing all bottom
+    :param plot_func: tuple of plotting functions to plot into the appropriate axes
+    :param x: X axis data.
+    :param y: Y axis data.
+    :param xlabel = 'x': X axis label.
+    :param ylabel = 'y': Y axis label.
+    :param link_obj = if specified, you can link to another object and scroll side-by-side
+        with one key-press, None(default) = keep un-linked.
+    :param combine_rows = list of subplots rows to combine into one subplot. Currently only supports doing all bottom
         rows which must match the functions specified in plot_func
-
-
     """
 
     # Initialize the class. Gather the data and labels.
     def __init__(self, plot_func, xlabel='', ylabel='',
                  titles=([' '] * 10000), n_rows=1,
-                 n_cols=1, figsize=(8, 6), combine_rows = [], **kwargs):
+                 n_cols=1, figsize=(8, 6), combine_rows=[],
+                 link_obj=None, **kwargs):
+
         self.plot_func = plot_func
         self.xlabel = xlabel
         self.ylabel = ylabel
@@ -93,8 +94,12 @@ class ScrollPlot:
 
 
         # Connect the figure to keyboard arrow keys.
-        self.fig.canvas.mpl_connect('key_press_event',
+        if link_obj is None:
+            self.fig.canvas.mpl_connect('key_press_event',
                                     lambda event: self.update_plots(event))
+        else:
+            link_obj.fig.canvas.mpl_connect('key_press_event',
+                                            lambda event: self.update_plots(event))
 
     # Go up or down the list. Left = down, right = up.
     def scroll(self, event):

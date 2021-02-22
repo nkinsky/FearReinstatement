@@ -12,6 +12,7 @@ from pickle import dump
 from helper_functions import find_dict_index as fd
 import numpy as np
 import re
+from pathlib import Path
 
 # Grab computer name to identify proper session directory location
 comp_name = environ['COMPUTERNAME']
@@ -43,7 +44,7 @@ def make_session_list(csv_directory=master_directory):
         for entry in reader:
             session_directories.append({"Animal": entry['Animal'],
                                         "Date": entry['Date'],
-                                        "Location": entry['Location'],
+                                        "Location": Path(entry['Location']),
                                         "Session": entry['Session'],
                                         "Notes": entry['Notes']})
 
@@ -150,6 +151,7 @@ def find_eraser_session(mouse, arena, exp_day, list_dir=master_directory):
         :return
             session_use: all session info for mouse/arena/exposure day
         """
+    assert isinstance(exp_day, int), "exp_day is not of type int"
     session_list = load_session_list(list_dir)
 
     # Construct regular expression to grab proper day
