@@ -13,14 +13,20 @@ from helper_functions import find_dict_index as fd
 import numpy as np
 import re
 from pathlib import Path
+import eraser_reference as err  # Note that this will only work in conjunction with nkinsky/Eraser forked repo on Github.
 
 # Grab computer name to identify proper session directory location
-comp_name = environ['COMPUTERNAME']
-if comp_name == 'NATLAPTOP':
-    master_directory = 'C:\Eraser\SessionDirectories'
-elif comp_name == 'NORVAL' or comp_name == 'CAS-2CUMM202-02' or comp_name == 'RKC-HAS-WD-0005':
-    master_directory = 'E:\Eraser\SessionDirectories'
-# print(master_directory)
+_, _, _, master_directory = err.get_comp_name()
+# try:
+#     comp_name = environ['COMPUTERNAME']
+#     if comp_name == 'NATLAPTOP':
+#         master_directory = 'C:\Eraser\SessionDirectories'
+#     elif comp_name == 'NORVAL' or comp_name == 'CAS-2CUMM202-02' or comp_name == 'RKC-HAS-WD-0005':
+#         master_directory = 'E:\Eraser\SessionDirectories'
+# except KeyError:
+#     if environ['HOME'] == '/Users/nkinsky':
+#         master_directory = '/Users/nkinsky/Documents/BU/Working/Eraser/SessionDirectories'
+# # print(master_directory)
 
 
 def make_session_list(csv_directory=master_directory):
