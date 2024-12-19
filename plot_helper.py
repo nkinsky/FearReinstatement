@@ -90,9 +90,6 @@ class ScrollPlot:
             self.apply_labels()
             # print(str(ax_ind))
 
-
-
-
         # Connect the figure to keyboard arrow keys.
         if link_obj is None:
             self.fig.canvas.mpl_connect('key_press_event',
