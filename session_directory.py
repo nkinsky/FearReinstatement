@@ -17,6 +17,10 @@ import eraser_reference as err  # Note that this will only work in conjunction w
 
 # Grab computer name to identify proper session directory location
 _, _, _, master_directory = err.get_comp_name()
+
+# Pre-load session list info
+session_list_pre = load(open(path.join(master_directory, 'SessionDirectories.pkl'), 'rb'))
+
 # try:
 #     comp_name = environ['COMPUTERNAME']
 #     if comp_name == 'NATLAPTOP':
@@ -63,9 +67,12 @@ def make_session_list(csv_directory=master_directory):
 
 def load_session_list(dir_use=master_directory):
 
-    file = path.join(dir_use, 'SessionDirectories.pkl')
+    if dir_use == master_directory:
+        session_list = session_list_pre
+    else:
+        file = path.join(dir_use, 'SessionDirectories.pkl')
 
-    session_list = load(open(file, 'rb'))
+        session_list = load(open(file, 'rb'))
 
     return session_list
 
@@ -138,6 +145,7 @@ def find_eraser_directory(mouse, arena, exp_day, list_dir=master_directory):
 
     # Loop through all sessions and check if mouse, arena, and exp_day all match
     session_directory = None  # Spit out None if no match is found
+    arena = "Open" if arena == "Neutral" else arena
     for session in session_list:
         if session["Animal"] == mouse and session["Notes"].find(arena) != -1 and \
                 dayreg.search(session["Notes"]) is not None:
@@ -157,7 +165,7 @@ def find_eraser_session(mouse, arena, exp_day, list_dir=master_directory):
         :return
             session_use: all session info for mouse/arena/exposure day
         """
-    assert isinstance(exp_day, int), "exp_day is not of type int"
+    assert isinstance(exp_day, (int, np.integer)), "exp_day is not of type int"
     session_list = load_session_list(list_dir)
 
     # Construct regular expression to grab proper day
